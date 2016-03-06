@@ -1,0 +1,24 @@
+var React = require('react');
+var Router = require('react-router');
+var RouteHandler = Router.RouteHandler;
+
+var Header = require('./parts/Header');
+
+var container = React.createClass({
+    getInitialState: function(){
+        return {
+            title: 'raml2doc',
+            status: 'develop'
+        }
+    },
+    render: function(){
+        return(
+            <div>
+                <Header title={this.state.title} status={this.state.status} />
+                <RouteHandler {...this.state}/>
+            </div>
+        );
+    }
+});
+
+module.exports = container;

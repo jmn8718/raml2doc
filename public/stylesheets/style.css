@@ -1,8 +1,25 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+html {
+  margin: 0;
+  padding: 0;
+
 }
 
-a {
-  color: #00B7FF;
+.root-cantainer{
+  padding-top: 64px;
+}
+
+.container-main{
+  padding: 15px 30px;
+}
+
+.container-main > h1{
+  text-align: center;
+}
+
+a.mdl-navigation__link.active{
+  font-weight: bolder;
+}
+
+.mdl-textfield.mdl-textfield {
+  width: 100%;
 }
