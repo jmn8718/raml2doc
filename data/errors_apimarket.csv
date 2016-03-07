@@ -1,0 +1,6 @@
+entity_id;interval_dt_tm;dev_username;api_environment;app_id;api_name;api_version;resource_name;response_status_code
+6;2016-03-02 15:10:29;dev;env;app;cards;v1;get#me;401
+6;2016-03-02 15:10:29;dev;env;app;cards;v1;get#me;501
+6;2016-03-02 15:10:29;dev;env;app;identity;v1;get#me;201
+6;2016-03-02 15:10:29;dev;env;app;identity;v1;get#you;501
+5;2016-03-02 15:10:29;dev;env;app;identity;v1;get#me;505

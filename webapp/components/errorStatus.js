@@ -26,7 +26,7 @@ var docFactory = React.createClass({
     },
     getData:function(){
         $.ajax({
-            url: '/statusError/file/index.js',
+            url: '/statusError/file/errors_apimarket.csv',
             dataType: 'json',
             cache: false,
             success: function(data) {
@@ -44,8 +44,6 @@ var docFactory = React.createClass({
                 <div className="mdl-cell mdl-cell--2-col">
                 </div>
                 <div className="mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100">
-                    <h1>Error Status</h1>
-                    <p>Here you can see the 500's errors.</p>
                     <ErrorList data={this.state.data}/>
                 </div>
                 <div className="mdl-cell mdl-cell--2-col">

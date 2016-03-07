@@ -23,3 +23,24 @@ a.mdl-navigation__link.active{
 .mdl-textfield.mdl-textfield {
   width: 100%;
 }
+
+.mdl-radio__label{
+  padding-right: 16px;
+}
+
+.mdl-radio{
+  padding-right: 8px;
+}
+.mdl-tooltip{
+  max-width: 75%;
+}
+.mdl-button{
+  display: block;
+  margin: 0 auto;
+}
+
+.md-cell.mdl-cell--6-col.mdl-list__item{
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 16px;
+}

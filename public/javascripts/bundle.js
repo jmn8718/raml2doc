@@ -23883,6 +23883,10 @@
 	var docFactory = React.createClass({
 	    displayName: "docFactory",
 
+	    componentDidMount: function componentDidMount() {
+	        //We have to upgrade the js elements
+	        componentHandler.upgradeDom();
+	    },
 	    render: function render() {
 	        return React.createElement(
 	            "div",
@@ -23956,17 +23960,82 @@
 	                    ),
 	                    React.createElement(
 	                        "div",
-	                        { className: "" },
+	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
+	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "baseUri" }),
 	                        React.createElement(
 	                            "label",
-	                            { className: "mdl-switch mdl-js-switch mdl-js-ripple-effect", htmlFor: "quickstart" },
-	                            React.createElement("input", { type: "checkbox", id: "quickstart", className: "mdl-switch__input" }),
+	                            { className: "mdl-textfield__label", htmlFor: "baseUri" },
+	                            "Base Uri"
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "baseUri" },
+	                            "(Optional) Introduce the base uri to set in your documentation. It will replace the base uri in your raml."
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
+	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "environment" }),
+	                        React.createElement(
+	                            "label",
+	                            { className: "mdl-textfield__label", htmlFor: "environment" },
+	                            "Environment"
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "environment" },
+	                            "(Optional) Introduce the environment word for your api. It will set your base uri to \"apis.bbva.com\", and the environment you provide will be added to \"\"."
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "mdl-textfield" },
+	                        React.createElement(
+	                            "span",
+	                            { className: "mdl-radio__label mdl-color-text--primary", id: "quickstart-checkbox-label" },
+	                            "Quickstart"
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "quickstart-checkbox-label" },
+	                            "(Required) Check the option to introduce a quickstart section in your documentation"
+	                        ),
+	                        React.createElement(
+	                            "label",
+	                            { className: "mdl-radio mdl-js-radio mdl-js-ripple-effect", htmlFor: "quickstart-1" },
+	                            React.createElement("input", { type: "radio", id: "quickstart-1", className: "mdl-radio__button", name: "quickstart", value: "no" }),
 	                            React.createElement(
 	                                "span",
-	                                { className: "mdl-switch__label mdl-color-text--primary" },
-	                                "Quickstart"
+	                                { className: "mdl-radio__label" },
+	                                "No"
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "label",
+	                            { className: "mdl-radio mdl-js-radio mdl-js-ripple-effect", htmlFor: "quickstart-2" },
+	                            React.createElement("input", { type: "radio", id: "quickstart-2", className: "mdl-radio__button", name: "quickstart", value: "paystats", defaultChecked: true }),
+	                            React.createElement(
+	                                "span",
+	                                { className: "mdl-radio__label" },
+	                                "Paystats"
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "label",
+	                            { className: "mdl-radio mdl-js-radio mdl-js-ripple-effect", htmlFor: "quickstart-3" },
+	                            React.createElement("input", { type: "radio", id: "quickstart-3", className: "mdl-radio__button", name: "quickstart", value: "general" }),
+	                            React.createElement(
+	                                "span",
+	                                { className: "mdl-radio__label" },
+	                                "General"
 	                            )
 	                        )
+	                    ),
+	                    React.createElement(
+	                        "button",
+	                        { className: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" },
+	                        "GENERATE"
 	                    )
 	                )
 	            ),
@@ -24013,11 +24082,11 @@
 	    },
 	    getData: function getData() {
 	        $.ajax({
-	            url: '/statusError/file/index.js',
+	            url: '/statusError/file/errors_apimarket.csv',
 	            dataType: 'json',
 	            cache: false,
 	            success: (function (data) {
-	                console.log(data.data);
+	                //console.log(data.data)
 	                this.setState({ data: data.data });
 	            }).bind(this),
 	            error: (function (xhr, status, err) {
@@ -24033,16 +24102,6 @@
 	            React.createElement(
 	                'div',
 	                { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
-	                React.createElement(
-	                    'h1',
-	                    null,
-	                    'Error Status'
-	                ),
-	                React.createElement(
-	                    'p',
-	                    null,
-	                    'Here you can see the 500\'s errors.'
-	                ),
 	                React.createElement(ErrorList, { data: this.state.data })
 	            ),
 	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
@@ -24069,13 +24128,9 @@
 	        return React.createElement(
 	            'div',
 	            { className: 'mdl-grid' },
-	            React.createElement(
-	                'ul',
-	                { className: 'mdl-list' },
-	                this.props.data.map(function (record) {
-	                    return React.createElement(ErrorCard, { key: record.timestamp, data: record });
-	                })
-	            )
+	            this.props.data.map(function (record, index) {
+	                return React.createElement(ErrorCard, { key: index, data: record });
+	            })
 	        );
 	    }
 	});
@@ -24094,8 +24149,8 @@
 	    displayName: 'errorCard',
 
 	    render: function render() {
-	        var classLi = "mdl-list__item mdl-list__item--three-line mdl-shadow--4dp";
-	        classLi += ' mdl-list__item--error-family-' + this.props.data['response_code'] / 100;
+	        var classLi = "md-cell mdl-cell--6-col mdl-list__item mdl-list__item--three-line mdl-shadow--4dp";
+	        classLi += ' mdl-list__item--error-family-' + Math.floor(this.props.data['response_code'] / 100);
 	        var classI = "material-icons mdl-list__item-avatar mdl-color--red item-" + this.props.data['api'];
 	        return React.createElement(
 	            'div',

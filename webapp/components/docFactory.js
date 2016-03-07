@@ -1,6 +1,10 @@
 var React = require('react');
 
 var docFactory = React.createClass({
+    componentDidMount:function(){
+        //We have to upgrade the js elements
+        componentHandler.upgradeDom();
+    },
     render: function(){
         return(
             <div className="mdl-grid root-cantainer">
@@ -40,16 +44,48 @@ var docFactory = React.createClass({
                             </div>
                         </div>
 
-
-
-                        <div className="">
-                            <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect" htmlFor="quickstart">
-                                <input type="checkbox" id="quickstart" className="mdl-switch__input"/>
-                                <span className="mdl-switch__label mdl-color-text--primary">Quickstart</span>
-                            </label>
+                        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input className="mdl-textfield__input" type="text" id="baseUri"></input>
+                            <label className="mdl-textfield__label" htmlFor="baseUri">Base Uri</label>
+                            <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="baseUri">
+                                (Optional) Introduce the base uri to set in your documentation. It will replace the base uri in your raml.
+                            </div>
                         </div>
 
+                        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input className="mdl-textfield__input" type="text" id="environment"></input>
+                            <label className="mdl-textfield__label" htmlFor="environment">Environment</label>
+                            <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="environment">
+                                (Optional) Introduce the environment word for your api. It will set your base uri to "apis.bbva.com", and the environment you provide will be added to "".
+                            </div>
+                        </div>
+
+                        <div className="mdl-textfield" >
+                            <span className="mdl-radio__label mdl-color-text--primary" id="quickstart-checkbox-label">Quickstart</span>
+                            <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="quickstart-checkbox-label">
+                                (Required) Check the option to introduce a quickstart section in your documentation
+                            </div>
+                            <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="quickstart-1">
+                                <input type="radio" id="quickstart-1" className="mdl-radio__button" name="quickstart" value="no" />
+                                    <span className="mdl-radio__label">No</span>
+                            </label>
+                            <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="quickstart-2">
+                                <input type="radio" id="quickstart-2" className="mdl-radio__button" name="quickstart" value="paystats" defaultChecked/>
+                                    <span className="mdl-radio__label">Paystats</span>
+                            </label>
+                            <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="quickstart-3">
+                                <input type="radio" id="quickstart-3" className="mdl-radio__button" name="quickstart" value="general"/>
+                                    <span className="mdl-radio__label">General</span>
+                            </label>
+
+                        </div>
+
+                        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                            GENERATE
+                        </button>
+
                     </form>
+
                 </div>
                 <div className="mdl-cell mdl-cell--2-col">
                 </div>
