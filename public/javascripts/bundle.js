@@ -57,7 +57,7 @@
 	var home = __webpack_require__(201);
 	var docFactory = __webpack_require__(202);
 	var errorStatus = __webpack_require__(203);
-	var notFound404 = __webpack_require__(204);
+	var notFound404 = __webpack_require__(206);
 
 	var Header = __webpack_require__(200);
 
@@ -23946,12 +23946,12 @@
 	                        React.createElement(
 	                            "label",
 	                            { className: "mdl-textfield__label", htmlFor: "terms" },
-	                            "Terms & Conditions Link"
+	                            "Terms and Conditions Link"
 	                        ),
 	                        React.createElement(
 	                            "div",
 	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "terms" },
-	                            "(Optional) Introduce the url for the terms & conditions link"
+	                            "(Optional) Introduce the url for the terms and conditions link"
 	                        )
 	                    ),
 	                    React.createElement(
@@ -23981,33 +23981,71 @@
 /* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var docFactory = React.createClass({
-	    displayName: "docFactory",
+	var ErrorList = __webpack_require__(204);
 
+	var docFactory = React.createClass({
+	    displayName: 'docFactory',
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            data: [
+	                //{
+	                //    service: 'get',
+	                //    api: 'de',
+	                //    response_code: 500,
+	                //    timestamp: 'now'
+	                //} ,
+	                //{
+	                //    service: 'post',
+	                //    api: 'as',
+	                //    response_code: 400,
+	                //    timestamp: 'yesterday'
+	                //}
+	            ]
+	        };
+	    },
+	    componentWillMount: function componentWillMount() {
+	        this.getData();
+	    },
+	    getData: function getData() {
+	        $.ajax({
+	            url: '/statusError/file/index.js',
+	            dataType: 'json',
+	            cache: false,
+	            success: (function (data) {
+	                console.log(data.data);
+	                this.setState({ data: data.data });
+	            }).bind(this),
+	            error: (function (xhr, status, err) {
+	                console.error(status, err.toString());
+	            }).bind(this)
+	        });
+	    },
 	    render: function render() {
 	        return React.createElement(
-	            "div",
-	            { className: "mdl-grid root-cantainer" },
-	            React.createElement("div", { className: "mdl-cell mdl-cell--2-col" }),
+	            'div',
+	            { className: 'mdl-grid root-cantainer' },
+	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' }),
 	            React.createElement(
-	                "div",
-	                { className: "mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100" },
+	                'div',
+	                { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
 	                React.createElement(
-	                    "h1",
+	                    'h1',
 	                    null,
-	                    "Error Status"
+	                    'Error Status'
 	                ),
 	                React.createElement(
-	                    "p",
+	                    'p',
 	                    null,
-	                    "Here you can see the 500's errors."
-	                )
+	                    'Here you can see the 500\'s errors.'
+	                ),
+	                React.createElement(ErrorList, { data: this.state.data })
 	            ),
-	            React.createElement("div", { className: "mdl-cell mdl-cell--2-col" })
+	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
 	        );
 	    }
 	});
@@ -24016,6 +24054,93 @@
 
 /***/ },
 /* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var ErrorCard = __webpack_require__(205);
+
+	var errorList = React.createClass({
+	    displayName: 'errorList',
+
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            { className: 'mdl-grid' },
+	            React.createElement(
+	                'ul',
+	                { className: 'mdl-list' },
+	                this.props.data.map(function (record) {
+	                    return React.createElement(ErrorCard, { key: record.timestamp, data: record });
+	                })
+	            )
+	        );
+	    }
+	});
+
+	module.exports = errorList;
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var errorCard = React.createClass({
+	    displayName: 'errorCard',
+
+	    render: function render() {
+	        var classLi = "mdl-list__item mdl-list__item--three-line mdl-shadow--4dp";
+	        classLi += ' mdl-list__item--error-family-' + this.props.data['response_code'] / 100;
+	        var classI = "material-icons mdl-list__item-avatar mdl-color--red item-" + this.props.data['api'];
+	        return React.createElement(
+	            'div',
+	            { className: classLi },
+	            React.createElement(
+	                'span',
+	                { className: 'mdl-list__item-primary-content' },
+	                React.createElement(
+	                    'i',
+	                    { className: classI },
+	                    'error'
+	                ),
+	                React.createElement(
+	                    'span',
+	                    null,
+	                    this.props.data['api']
+	                ),
+	                React.createElement(
+	                    'span',
+	                    { className: 'mdl-list__item-timestamp' },
+	                    this.props.data['timestamp']
+	                ),
+	                React.createElement(
+	                    'span',
+	                    { className: 'mdl-list__item-text-body' },
+	                    this.props.data['service']
+	                )
+	            ),
+	            React.createElement(
+	                'span',
+	                { className: 'mdl-list__item-secondary-action' },
+	                React.createElement(
+	                    'span',
+	                    { className: 'mdl-typography--display-1' },
+	                    this.props.data['response_code']
+	                )
+	            )
+	        );
+	    }
+	});
+
+	module.exports = errorCard;
+
+/***/ },
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
