@@ -26,7 +26,7 @@ var docFactory = React.createClass({
     },
     getData:function(){
         $.ajax({
-            url: '/statusError/file/errors_apimarket.csv',
+            url: '/statusError/file/errors_apimarket_pro_red.csv',
             dataType: 'json',
             cache: false,
             success: function(data) {
@@ -41,12 +41,12 @@ var docFactory = React.createClass({
     render: function(){
         return(
             <div className="mdl-grid root-cantainer">
-                <div className="mdl-cell mdl-cell--2-col">
+                <div className="mdl-cell mdl-cell--1-col">
                 </div>
-                <div className="mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100">
+                <div className="mdl-cell mdl-cell--10-col mdl-shadow--2dp container-main mdl-color--grey-100">
                     <ErrorList data={this.state.data}/>
                 </div>
-                <div className="mdl-cell mdl-cell--2-col">
+                <div className="mdl-cell mdl-cell--1-col">
                 </div>
             </div>
         )

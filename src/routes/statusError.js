@@ -13,15 +13,19 @@ function parseError(data){
 
   var dataSplits = data.split('\n')
   for( var i=1; i<dataSplits.length;i++){
-    var splited = dataSplits[i].replace('\n','').split(';')
-    //console.log(splited)
-    errors.push({
-      service: splited[7],
-      api: splited[5],
-      response_code: splited[8],
-      timestamp: splited[1],
-      entity: splited[0]
-    })
+    if(dataSplits[i].length>0){
+      var splited = dataSplits[i].replace('\n','').split(',')
+
+      splited[1] = splited[1].replace(/"/g,'')
+
+      errors.push({
+        service: splited[5],
+        api: splited[4],
+        response_code: splited[6],
+        timestamp: splited[1],
+        entity: splited[0]
+      })
+    }
   }
   console.log(errors)
   return { data: errors};

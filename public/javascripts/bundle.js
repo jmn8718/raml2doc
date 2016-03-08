@@ -24082,7 +24082,7 @@
 	    },
 	    getData: function getData() {
 	        $.ajax({
-	            url: '/statusError/file/errors_apimarket.csv',
+	            url: '/statusError/file/errors_apimarket_pro_red.csv',
 	            dataType: 'json',
 	            cache: false,
 	            success: (function (data) {
@@ -24098,13 +24098,22 @@
 	        return React.createElement(
 	            'div',
 	            { className: 'mdl-grid root-cantainer' },
-	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' }),
+	            React.createElement('div', { className: 'mdl-cell mdl-cell--1-col' }),
 	            React.createElement(
 	                'div',
-	                { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
+	                { className: 'mdl-cell mdl-cell--10-col mdl-shadow--2dp container-main mdl-color--grey-100' },
+	                React.createElement(
+	                    'div',
+	                    { className: '' },
+	                    React.createElement(
+	                        'h1',
+	                        null,
+	                        'Filter'
+	                    )
+	                ),
 	                React.createElement(ErrorList, { data: this.state.data })
 	            ),
-	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
+	            React.createElement('div', { className: 'mdl-cell mdl-cell--1-col' })
 	        );
 	    }
 	});
