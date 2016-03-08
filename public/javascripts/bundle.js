@@ -23876,170 +23876,262 @@
 /* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var React = __webpack_require__(1);
 
 	var docFactory = React.createClass({
-	    displayName: "docFactory",
+	    displayName: 'docFactory',
 
+	    getInitialState: function getInitialState() {
+	        return {
+	            generatedContent: 'content',
+	            hasGeneratedContent: false,
+	            messageLoading: '',
+	            loading: false,
+	            messageError: '',
+	            error: false,
+	            url: '',
+	            apiName: '',
+	            overviewLink: '',
+	            termsLink: '',
+	            baseUri: '',
+	            environment: '',
+	            quickstart: 'general'
+	        };
+	    },
 	    componentDidMount: function componentDidMount() {
 	        //We have to upgrade the js elements
 	        componentHandler.upgradeDom();
 	    },
+	    handleChange: function handleChange(event) {
+	        console.log(event.target);
+	        var state = {};
+	        if (event.target.id === 'url') state = { url: event.target.value };else if (event.target.id === 'apiName') state = { apiName: event.target.value };else if (event.target.id === 'overview') state = { overviewLink: event.target.value };else if (event.target.id === 'terms') state = { termsLink: event.target.value };else if (event.target.id === 'baseUri') state = { baseUri: event.target.value };else if (event.target.id === 'environment') state = { environment: event.target.value };else if (event.target.id.indexOf('quickstart') > -1) state = { quickstart: event.target.value };
+	        this.setState(state);
+	    },
+	    handleSubmit: function handleSubmit(e) {
+	        e.preventDefault();
+	        var url = this.state.url.trim();
+	        var apiName = this.state.apiName.trim();
+	        var overviewLink = this.state.overviewLink.trim();
+	        var termsLink = this.state.termsLink.trim();
+	        var baseUri = this.state.baseUri.trim();
+	        var environment = this.state.environment.trim();
+	        var quickstart = this.state.quickstart;
+	        if (url.length <= 0) {
+	            this.setError('Introduce a valid url.');
+	        } else if (apiName.length <= 0) {
+	            this.setError('Introduce a name for the api.');
+	        } else {
+	            var url = '/docFactory/raml?url=' + url + '&apiName=' + apiName + '&quickstart=' + quickstart;
+	            console.log(url);
+	            this.setState({
+	                generatedContent: url,
+	                hasGeneratedContent: true
+	            });
+	        }
+	    },
+	    setError: function setError(msg) {
+	        this.setState({ error: true, messageError: msg });
+	        setTimeout((function () {
+	            this.setState({ error: false, messageError: '' });
+	        }).bind(this), 10000);
+	    },
 	    render: function render() {
 	        return React.createElement(
-	            "div",
-	            { className: "mdl-grid root-cantainer" },
-	            React.createElement("div", { className: "mdl-cell mdl-cell--2-col" }),
+	            'div',
+	            { className: 'mdl-grid root-cantainer' },
 	            React.createElement(
-	                "div",
-	                { className: "mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100" },
+	                'div',
+	                { className: this.state.error ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--red-100" : "hidden" },
+	                React.createElement('div', { className: 'mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active' }),
 	                React.createElement(
-	                    "form",
-	                    { action: "#" },
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
-	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "url", required: true }),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-textfield__label", htmlFor: "url" },
-	                            "URL"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "url" },
-	                            "(Required) Introduce the url of the RAML"
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
-	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "api", required: true }),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-textfield__label", htmlFor: "api" },
-	                            "API Name"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "api" },
-	                            "(Required) Introduce the Api name"
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
-	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "overview" }),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-textfield__label", htmlFor: "overview" },
-	                            "Overview Link"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "overview" },
-	                            "(Optional) Introduce the url for the overview link"
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
-	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "terms" }),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-textfield__label", htmlFor: "terms" },
-	                            "Terms and Conditions Link"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "terms" },
-	                            "(Optional) Introduce the url for the terms and conditions link"
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
-	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "baseUri" }),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-textfield__label", htmlFor: "baseUri" },
-	                            "Base Uri"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "baseUri" },
-	                            "(Optional) Introduce the base uri to set in your documentation. It will replace the base uri in your raml."
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" },
-	                        React.createElement("input", { className: "mdl-textfield__input", type: "text", id: "environment" }),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-textfield__label", htmlFor: "environment" },
-	                            "Environment"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "environment" },
-	                            "(Optional) Introduce the environment word for your api. It will set your base uri to \"apis.bbva.com\", and the environment you provide will be added to \"\"."
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "mdl-textfield" },
-	                        React.createElement(
-	                            "span",
-	                            { className: "mdl-radio__label mdl-color-text--primary", id: "quickstart-checkbox-label" },
-	                            "Quickstart"
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { className: "mdl-tooltip mdl-tooltip--bottom", htmlFor: "quickstart-checkbox-label" },
-	                            "(Required) Check the option to introduce a quickstart section in your documentation"
-	                        ),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-radio mdl-js-radio mdl-js-ripple-effect", htmlFor: "quickstart-1" },
-	                            React.createElement("input", { type: "radio", id: "quickstart-1", className: "mdl-radio__button", name: "quickstart", value: "no" }),
-	                            React.createElement(
-	                                "span",
-	                                { className: "mdl-radio__label" },
-	                                "No"
-	                            )
-	                        ),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-radio mdl-js-radio mdl-js-ripple-effect", htmlFor: "quickstart-2" },
-	                            React.createElement("input", { type: "radio", id: "quickstart-2", className: "mdl-radio__button", name: "quickstart", value: "paystats", defaultChecked: true }),
-	                            React.createElement(
-	                                "span",
-	                                { className: "mdl-radio__label" },
-	                                "Paystats"
-	                            )
-	                        ),
-	                        React.createElement(
-	                            "label",
-	                            { className: "mdl-radio mdl-js-radio mdl-js-ripple-effect", htmlFor: "quickstart-3" },
-	                            React.createElement("input", { type: "radio", id: "quickstart-3", className: "mdl-radio__button", name: "quickstart", value: "general" }),
-	                            React.createElement(
-	                                "span",
-	                                { className: "mdl-radio__label" },
-	                                "General"
-	                            )
-	                        )
-	                    ),
-	                    React.createElement(
-	                        "button",
-	                        { className: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" },
-	                        "GENERATE"
-	                    )
+	                    'p',
+	                    null,
+	                    this.state.messageError
 	                )
 	            ),
-	            React.createElement("div", { className: "mdl-cell mdl-cell--2-col" })
+	            React.createElement(
+	                'div',
+	                { className: 'mdl-grid' },
+	                React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' }),
+	                React.createElement(
+	                    'div',
+	                    { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
+	                    React.createElement(
+	                        'form',
+	                        { onSubmit: this.handleSubmit },
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
+	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'url', id: 'url', ref: 'url', onChange: this.handleChange }),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-textfield__label', htmlFor: 'url' },
+	                                'URL'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'url' },
+	                                '(Required) Introduce the url of the RAML'
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
+	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'apiName', ref: 'apiName', onChange: this.handleChange }),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-textfield__label', htmlFor: 'apiName' },
+	                                'API Name'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'apiName' },
+	                                '(Required) Introduce the Api name'
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
+	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'overview', onChange: this.handleChange }),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-textfield__label', htmlFor: 'overview' },
+	                                'Overview Link'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'overview' },
+	                                '(Optional) Introduce the url for the overview link'
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
+	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'terms', onChange: this.handleChange }),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-textfield__label', htmlFor: 'terms' },
+	                                'Terms and Conditions Link'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'terms' },
+	                                '(Optional) Introduce the url for the terms and conditions link'
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
+	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'baseUri', onChange: this.handleChange }),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-textfield__label', htmlFor: 'baseUri' },
+	                                'Base Uri'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'baseUri' },
+	                                '(Optional) Introduce the base uri to set in your documentation. It will replace the base uri in your raml.'
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
+	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'environment', onChange: this.handleChange }),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-textfield__label', htmlFor: 'environment' },
+	                                'Environment'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'environment' },
+	                                '(Optional) Introduce the environment word for your api. It will set your base uri to "apis.bbva.com", and the environment you provide will be added to "".'
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield' },
+	                            React.createElement(
+	                                'span',
+	                                { className: 'mdl-radio__label mdl-color-text--primary', id: 'quickstart-checkbox-label' },
+	                                'Quickstart'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'quickstart-checkbox-label' },
+	                                '(Required) Check the option to introduce a quickstart section in your documentation'
+	                            ),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'quickstart-1' },
+	                                React.createElement('input', { type: 'radio', id: 'quickstart-1', className: 'mdl-radio__button', name: 'quickstart', value: 'no', ref: 'quickstart', onChange: this.handleChange }),
+	                                React.createElement(
+	                                    'span',
+	                                    { className: 'mdl-radio__label' },
+	                                    'No'
+	                                )
+	                            ),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'quickstart-2' },
+	                                React.createElement('input', { type: 'radio', id: 'quickstart-2', className: 'mdl-radio__button', name: 'quickstart', value: 'paystats', ref: 'quickstart', onChange: this.handleChange }),
+	                                React.createElement(
+	                                    'span',
+	                                    { className: 'mdl-radio__label' },
+	                                    'Paystats'
+	                                )
+	                            ),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'quickstart-3' },
+	                                React.createElement('input', { type: 'radio', id: 'quickstart-3', className: 'mdl-radio__button', name: 'quickstart', value: 'general', ref: 'quickstart', onChange: this.handleChange, defaultChecked: true }),
+	                                React.createElement(
+	                                    'span',
+	                                    { className: 'mdl-radio__label' },
+	                                    'General'
+	                                )
+	                            )
+	                        ),
+	                        React.createElement(
+	                            'button',
+	                            { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
+	                            'GENERATE'
+	                        )
+	                    )
+	                ),
+	                React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: this.state.hasGeneratedContent ? "mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--grey-100" : "hidden" },
+	                React.createElement(
+	                    'div',
+	                    { className: 'mdl-grid' },
+	                    React.createElement(
+	                        'button',
+	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
+	                        'COPY'
+	                    ),
+	                    React.createElement(
+	                        'button',
+	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
+	                        'GENERATE'
+	                    )
+	                ),
+	                React.createElement(
+	                    'div',
+	                    { className: 'mdl-grid' },
+	                    React.createElement(
+	                        'pre',
+	                        { className: 'mdl-cell mdl-cell--12-col mdl-color--grey-400' },
+	                        this.state.generatedContent
+	                    )
+	                )
+	            )
 	        );
 	    }
 	});
@@ -24102,15 +24194,6 @@
 	            React.createElement(
 	                'div',
 	                { className: 'mdl-cell mdl-cell--10-col mdl-shadow--2dp container-main mdl-color--grey-100' },
-	                React.createElement(
-	                    'div',
-	                    { className: '' },
-	                    React.createElement(
-	                        'h1',
-	                        null,
-	                        'Filter'
-	                    )
-	                ),
 	                React.createElement(ErrorList, { data: this.state.data })
 	            ),
 	            React.createElement('div', { className: 'mdl-cell mdl-cell--1-col' })

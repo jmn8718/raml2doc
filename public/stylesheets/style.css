@@ -62,3 +62,10 @@ a.mdl-navigation__link.active{
   float: right;
   padding-right: 5%;
 }
+.error-message{
+  text-align: center;
+}
+.mdl-spinner{
+  display: block;
+  margin: 10px auto;
+}
