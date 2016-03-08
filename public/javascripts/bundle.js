@@ -23933,37 +23933,43 @@
 	            if (termsLink.length > 0) url += '&termsLink=' + termsLink;
 	            if (overviewLink.length > 0) url += '&overviewLink=' + overviewLink;
 	            if (template.length > 0) url += '&template=' + template;
-	            this.setState({
-	                loading: true,
-	                messageLoading: 'Generating the documentation, please wait a little...'
-	            });
+
 	            this.setState({ uriRequest: url });
-	            $.ajax({
-	                url: url,
-	                //dataType: 'json',
-	                cache: false,
-	                success: (function (data) {
-	                    //console.log(data.data)
-	                    this.setState({
-	                        generatedContent: data,
-	                        hasGeneratedContent: true,
-	                        loading: false,
-	                        messageLoading: ''
-	                    });
-	                }).bind(this),
-	                error: (function (xhr, status, err) {
-	                    console.error(status, err.toString());
-	                    this.setState({
-	                        loading: false,
-	                        messageLoading: ''
-	                    });
-	                    this.setError(err.toString());
-	                }).bind(this)
-	            });
+	            if (template.length > 0 && template === 'raml2html') {
+	                this.openNewWindowOnClick(url);
+	            } else {
+	                this.setState({
+	                    loading: true,
+	                    messageLoading: 'Generating the documentation, please wait a little...'
+	                });
+	                $.ajax({
+	                    url: url,
+	                    //dataType: 'json',
+	                    cache: false,
+	                    success: (function (data) {
+	                        //console.log(data.data)
+	                        this.setState({
+	                            generatedContent: data,
+	                            hasGeneratedContent: true,
+	                            loading: false,
+	                            messageLoading: ''
+	                        });
+	                    }).bind(this),
+	                    error: (function (xhr, status, err) {
+	                        console.error(status, err.toString());
+	                        this.setState({
+	                            loading: false,
+	                            messageLoading: ''
+	                        });
+	                        this.setError(err.toString());
+	                    }).bind(this)
+	                });
+	            }
 	        }
 	    },
-	    openNewWindowOnClick: function openNewWindowOnClick() {
-	        var tab = window.open(this.state.uriRequest, '_blank');
+	    openNewWindowOnClick: function openNewWindowOnClick(url) {
+	        var uri = url !== undefined ? url : this.state.uriRequest;
+	        var tab = window.open(uri, '_blank');
 	        tab.focus();
 	    },
 	    setError: function setError(msg) {
