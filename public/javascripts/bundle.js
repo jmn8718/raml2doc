@@ -23885,6 +23885,7 @@
 
 	    getInitialState: function getInitialState() {
 	        return {
+	            uriRequest: '',
 	            generatedContent: 'content',
 	            hasGeneratedContent: false,
 	            messageLoading: '',
@@ -23897,6 +23898,7 @@
 	            termsLink: '',
 	            baseUri: '',
 	            environment: '',
+	            template: 'raml2html',
 	            quickstart: 'general'
 	        };
 	    },
@@ -23907,7 +23909,7 @@
 	    handleChange: function handleChange(event) {
 	        console.log(event.target);
 	        var state = {};
-	        if (event.target.id === 'url') state = { url: event.target.value };else if (event.target.id === 'apiName') state = { apiName: event.target.value };else if (event.target.id === 'overview') state = { overviewLink: event.target.value };else if (event.target.id === 'terms') state = { termsLink: event.target.value };else if (event.target.id === 'baseUri') state = { baseUri: event.target.value };else if (event.target.id === 'environment') state = { environment: event.target.value };else if (event.target.id.indexOf('quickstart') > -1) state = { quickstart: event.target.value };
+	        if (event.target.id === 'url') state = { url: event.target.value };else if (event.target.id === 'apiName') state = { apiName: event.target.value };else if (event.target.id === 'overview') state = { overviewLink: event.target.value };else if (event.target.id === 'terms') state = { termsLink: event.target.value };else if (event.target.id === 'baseUri') state = { baseUri: event.target.value };else if (event.target.id === 'environment') state = { environment: event.target.value };else if (event.target.id.indexOf('quickstart') > -1) state = { quickstart: event.target.value };else if (event.target.id.indexOf('template') > -1) state = { template: event.target.value };
 	        this.setState(state);
 	    },
 	    handleSubmit: function handleSubmit(e) {
@@ -23919,18 +23921,50 @@
 	        var baseUri = this.state.baseUri.trim();
 	        var environment = this.state.environment.trim();
 	        var quickstart = this.state.quickstart;
+	        var template = this.state.template;
 	        if (url.length <= 0) {
 	            this.setError('Introduce a valid url.');
 	        } else if (apiName.length <= 0) {
 	            this.setError('Introduce a name for the api.');
 	        } else {
 	            var url = '/docFactory/raml?url=' + url + '&apiName=' + apiName + '&quickstart=' + quickstart;
-	            console.log(url);
+	            if (environment.length > 0) url += '&environment=' + environment;
+	            if (baseUri.length > 0) url += '&baseUri=' + baseUri;
+	            if (termsLink.length > 0) url += '&termsLink=' + termsLink;
+	            if (overviewLink.length > 0) url += '&overviewLink=' + overviewLink;
+	            if (template.length > 0) url += '&template=' + template;
 	            this.setState({
-	                generatedContent: url,
-	                hasGeneratedContent: true
+	                loading: true,
+	                messageLoading: 'Generating the documentation, please wait a little...'
+	            });
+	            this.setState({ uriRequest: url });
+	            $.ajax({
+	                url: url,
+	                //dataType: 'json',
+	                cache: false,
+	                success: (function (data) {
+	                    //console.log(data.data)
+	                    this.setState({
+	                        generatedContent: data,
+	                        hasGeneratedContent: true,
+	                        loading: false,
+	                        messageLoading: ''
+	                    });
+	                }).bind(this),
+	                error: (function (xhr, status, err) {
+	                    console.error(status, err.toString());
+	                    this.setState({
+	                        loading: false,
+	                        messageLoading: ''
+	                    });
+	                    this.setError(err.toString());
+	                }).bind(this)
 	            });
 	        }
+	    },
+	    openNewWindowOnClick: function openNewWindowOnClick() {
+	        var tab = window.open(this.state.uriRequest, '_blank');
+	        tab.focus();
 	    },
 	    setError: function setError(msg) {
 	        this.setState({ error: true, messageError: msg });
@@ -23944,8 +23978,17 @@
 	            { className: 'mdl-grid root-cantainer' },
 	            React.createElement(
 	                'div',
-	                { className: this.state.error ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--red-100" : "hidden" },
+	                { className: this.state.loading ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--green-50" : "hidden" },
 	                React.createElement('div', { className: 'mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active' }),
+	                React.createElement(
+	                    'p',
+	                    null,
+	                    this.state.messageLoading
+	                )
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: this.state.error ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--red-200" : "hidden" },
 	                React.createElement(
 	                    'p',
 	                    null,
@@ -24097,6 +24140,30 @@
 	                            )
 	                        ),
 	                        React.createElement(
+	                            'div',
+	                            { className: 'mdl-textfield' },
+	                            React.createElement(
+	                                'span',
+	                                { className: 'mdl-radio__label mdl-color-text--primary', id: 'template-checkbox-label' },
+	                                'Template'
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'template-checkbox-label' },
+	                                '(Required) Check the option for the template of the documentation'
+	                            ),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'template-1' },
+	                                React.createElement('input', { type: 'radio', id: 'template-1', className: 'mdl-radio__button', name: 'template', value: 'raml2html', ref: 'template', onChange: this.handleChange, defaultChecked: true }),
+	                                React.createElement(
+	                                    'span',
+	                                    { className: 'mdl-radio__label' },
+	                                    'raml2html'
+	                                )
+	                            )
+	                        ),
+	                        React.createElement(
 	                            'button',
 	                            { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
 	                            'GENERATE'
@@ -24114,12 +24181,12 @@
 	                    React.createElement(
 	                        'button',
 	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
-	                        'COPY'
+	                        'COPY HTML'
 	                    ),
 	                    React.createElement(
 	                        'button',
-	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
-	                        'GENERATE'
+	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored', onClick: this.openNewWindowOnClick },
+	                        'VIEW FULL'
 	                    )
 	                ),
 	                React.createElement(

@@ -64,8 +64,10 @@ a.mdl-navigation__link.active{
 }
 .error-message{
   text-align: center;
+  width: 100%;
+  margin: 0;
 }
 .mdl-spinner{
   display: block;
-  margin: 10px auto;
+  margin: 16px auto;
 }

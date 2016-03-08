@@ -3,6 +3,7 @@ var React = require('react');
 var docFactory = React.createClass({
     getInitialState: function(){
       return {
+          uriRequest:'',
           generatedContent:'content',
           hasGeneratedContent:false,
           messageLoading: '',
@@ -15,6 +16,7 @@ var docFactory = React.createClass({
           termsLink:'',
           baseUri:'',
           environment:'',
+          template:'raml2html',
           quickstart:'general'
       }
     },
@@ -39,6 +41,8 @@ var docFactory = React.createClass({
             state = { environment: event.target.value}
         else if (event.target.id.indexOf('quickstart') > -1)
             state = { quickstart: event.target.value}
+        else if (event.target.id.indexOf('template') > -1)
+            state = { template: event.target.value}
         this.setState(state);
     },
     handleSubmit: function(e){
@@ -50,19 +54,57 @@ var docFactory = React.createClass({
         var baseUri = this.state.baseUri.trim();
         var environment = this.state.environment.trim();
         var quickstart = this.state.quickstart;
+        var template = this.state.template;
         if(url.length <= 0){
             this.setError('Introduce a valid url.')
         } else if(apiName.length <= 0){
             this.setError('Introduce a name for the api.')
         } else {
             var url = '/docFactory/raml?url='+url+'&apiName='+apiName+'&quickstart='+quickstart
-            console.log(url)
+            if(environment.length>0)
+                url+='&environment='+environment
+            if(baseUri.length>0)
+                url+='&baseUri='+baseUri
+            if(termsLink.length>0)
+                url+='&termsLink='+termsLink
+            if(overviewLink.length>0)
+                url+='&overviewLink='+overviewLink
+            if(template.length>0)
+                url+='&template='+template
             this.setState({
-                generatedContent:url,
-                hasGeneratedContent: true
+                loading:true,
+                messageLoading:'Generating the documentation, please wait a little...'
             });
+            this.setState({uriRequest:url})
+            $.ajax({
+                url: url,
+                //dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    //console.log(data.data)
+                    this.setState({
+                        generatedContent:data,
+                        hasGeneratedContent: true,
+                        loading:false,
+                        messageLoading: ''
+                    });
+                }.bind(this),
+                error: function(xhr, status, err) {
+                    console.error( status, err.toString());
+                    this.setState({
+                        loading:false,
+                        messageLoading: ''
+                    });
+                    this.setError(err.toString())
+                }.bind(this)
+            });
+
         }
 
+    },
+    openNewWindowOnClick:function(){
+        var tab = window.open(this.state.uriRequest,'_blank');
+        tab.focus();
     },
     setError: function(msg){
         this.setState({error:true, messageError: msg});
@@ -73,8 +115,11 @@ var docFactory = React.createClass({
     render: function(){
         return(
             <div className="mdl-grid root-cantainer">
-                <div className={this.state.error ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--red-100" : "hidden"}>
+                <div className={this.state.loading ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--green-50" : "hidden"}>
                     <div className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+                    <p>{this.state.messageLoading}</p>
+                </div>
+                <div className={this.state.error ? "error-message mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--red-200" : "hidden"}>
                     <p>{this.state.messageError}</p>
                 </div>
                 <div className="mdl-grid">
@@ -147,7 +192,17 @@ var docFactory = React.createClass({
                                     <input type="radio" id="quickstart-3" className="mdl-radio__button" name="quickstart" value="general" ref="quickstart"  onChange={this.handleChange} defaultChecked/>
                                     <span className="mdl-radio__label">General</span>
                                 </label>
+                            </div>
 
+                            <div className="mdl-textfield" >
+                                <span className="mdl-radio__label mdl-color-text--primary" id="template-checkbox-label">Template</span>
+                                <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="template-checkbox-label">
+                                    (Required) Check the option for the template of the documentation
+                                </div>
+                                <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="template-1">
+                                    <input type="radio" id="template-1" className="mdl-radio__button" name="template" value="raml2html" ref="template" onChange={this.handleChange} defaultChecked/>
+                                    <span className="mdl-radio__label">raml2html</span>
+                                </label>
                             </div>
 
                             <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
@@ -164,7 +219,7 @@ var docFactory = React.createClass({
                         <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                             COPY HTML
                         </button>
-                        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={this.openNewWindowOnClick}>
                             VIEW FULL
                         </button>
                     </div>
