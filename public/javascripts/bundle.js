@@ -23843,34 +23843,21 @@
 	var Router = __webpack_require__(157);
 	var Link = Router.Link;
 
-	var notFound404 = React.createClass({
-	    displayName: 'notFound404',
+	var home = React.createClass({
+	    displayName: 'home',
 
 	    render: function render() {
 	        return React.createElement(
 	            'div',
 	            { className: 'mdl-grid root-cantainer' },
 	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' }),
-	            React.createElement(
-	                'div',
-	                { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
-	                React.createElement(
-	                    'h1',
-	                    null,
-	                    'HOME'
-	                ),
-	                React.createElement(
-	                    'p',
-	                    null,
-	                    'Welcome to our page.'
-	                )
-	            ),
+	            React.createElement('div', { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' }),
 	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
 	        );
 	    }
 	});
 
-	module.exports = notFound404;
+	module.exports = home;
 
 /***/ },
 /* 202 */
@@ -23898,16 +23885,26 @@
 	            termsLink: '',
 	            baseUri: '',
 	            environment: '',
-	            template: 'raml2html',
-	            quickstart: 'general'
+	            template: 'customDoc',
+	            quickstart: 'general',
+	            clipboard: undefined
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        //We have to upgrade the js elements
-	        componentHandler.upgradeDom();
+	        var that = this;
+	        setTimeout(function () {
+	            that.setState({ clipboard: new Clipboard('.btn-copy') });
+	            //this.state.clipboard = new Clipboard('.btn-copy');
+	            if (componentHandler !== undefined) componentHandler.upgradeDom();
+	            //that.setState({loading:false})
+	            //console.log(that.state.clipboard)
+	        }, 150);
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	        this.state.clipboard.destroy();
 	    },
 	    handleChange: function handleChange(event) {
-	        console.log(event.target);
+	        //console.log(event.target)
 	        var state = {};
 	        if (event.target.id === 'url') state = { url: event.target.value };else if (event.target.id === 'apiName') state = { apiName: event.target.value };else if (event.target.id === 'overview') state = { overviewLink: event.target.value };else if (event.target.id === 'terms') state = { termsLink: event.target.value };else if (event.target.id === 'baseUri') state = { baseUri: event.target.value };else if (event.target.id === 'environment') state = { environment: event.target.value };else if (event.target.id.indexOf('quickstart') > -1) state = { quickstart: event.target.value };else if (event.target.id.indexOf('template') > -1) state = { template: event.target.value };
 	        this.setState(state);
@@ -23926,24 +23923,27 @@
 	            this.setError('Introduce a valid url.');
 	        } else if (apiName.length <= 0) {
 	            this.setError('Introduce a name for the api.');
+	        } else if (template.length <= 0) {
+	            this.setError('Select a template.');
 	        } else {
-	            var url = '/docFactory/raml?url=' + url + '&apiName=' + apiName + '&quickstart=' + quickstart;
-	            if (environment.length > 0) url += '&environment=' + environment;
-	            if (baseUri.length > 0) url += '&baseUri=' + baseUri;
-	            if (termsLink.length > 0) url += '&termsLink=' + termsLink;
-	            if (overviewLink.length > 0) url += '&overviewLink=' + overviewLink;
-	            if (template.length > 0) url += '&template=' + template;
-
-	            this.setState({ uriRequest: url });
+	            var urlApi = '/' + template;
+	            urlApi += '/raml?url=' + url + '&apiName=' + apiName + '&quickstart=' + quickstart;
+	            if (environment.length > 0) urlApi += '&environment=' + environment;
+	            if (baseUri.length > 0) urlApi += '&baseUri=' + baseUri;
+	            if (termsLink.length > 0) urlApi += '&termsLink=' + termsLink;
+	            if (overviewLink.length > 0) urlApi += '&overviewLink=' + overviewLink;
+	            if (template.length > 0) urlApi += '&template=' + template;
+	            console.log(url);
+	            this.setState({ uriRequest: urlApi });
 	            if (template.length > 0 && template === 'raml2html') {
-	                this.openNewWindowOnClick(url);
+	                this.openNewWindowOnClick(urlApi);
 	            } else {
 	                this.setState({
 	                    loading: true,
 	                    messageLoading: 'Generating the documentation, please wait a little...'
 	                });
 	                $.ajax({
-	                    url: url,
+	                    url: urlApi,
 	                    //dataType: 'json',
 	                    cache: false,
 	                    success: (function (data) {
@@ -23966,6 +23966,12 @@
 	                });
 	            }
 	        }
+	    },
+	    clearContent: function clearContent() {
+	        this.setState({
+	            generatedContent: '',
+	            hasGeneratedContent: false
+	        });
 	    },
 	    openNewWindowOnClick: function openNewWindowOnClick(url) {
 	        var uri = url !== undefined ? url : this.state.uriRequest;
@@ -24004,10 +24010,10 @@
 	            React.createElement(
 	                'div',
 	                { className: 'mdl-grid' },
-	                React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' }),
+	                React.createElement('div', { className: this.state.hasGeneratedContent ? "hidden" : "mdl-cell mdl-cell--2-col" }),
 	                React.createElement(
 	                    'div',
-	                    { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
+	                    { className: this.state.hasGeneratedContent ? "mdl-cell mdl-cell--4-col mdl-shadow--2dp container-main mdl-color--grey-100" : "mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100" },
 	                    React.createElement(
 	                        'form',
 	                        { onSubmit: this.handleSubmit },
@@ -24161,11 +24167,21 @@
 	                            React.createElement(
 	                                'label',
 	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'template-1' },
-	                                React.createElement('input', { type: 'radio', id: 'template-1', className: 'mdl-radio__button', name: 'template', value: 'raml2html', ref: 'template', onChange: this.handleChange, defaultChecked: true }),
+	                                React.createElement('input', { type: 'radio', id: 'template-1', className: 'mdl-radio__button', name: 'template', value: 'raml2html', ref: 'template', onChange: this.handleChange }),
 	                                React.createElement(
 	                                    'span',
 	                                    { className: 'mdl-radio__label' },
 	                                    'raml2html'
+	                                )
+	                            ),
+	                            React.createElement(
+	                                'label',
+	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'template-2' },
+	                                React.createElement('input', { type: 'radio', id: 'template-2', className: 'mdl-radio__button', name: 'template', value: 'custom', ref: 'template', onChange: this.handleChange, defaultChecked: true }),
+	                                React.createElement(
+	                                    'span',
+	                                    { className: 'mdl-radio__label' },
+	                                    'custom'
 	                                )
 	                            )
 	                        ),
@@ -24176,32 +24192,37 @@
 	                        )
 	                    )
 	                ),
-	                React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
-	            ),
-	            React.createElement(
-	                'div',
-	                { className: this.state.hasGeneratedContent ? "mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--grey-100" : "hidden" },
+	                React.createElement('div', { className: this.state.hasGeneratedContent ? "hidden" : "mdl-cell mdl-cell--2-col" }),
 	                React.createElement(
 	                    'div',
-	                    { className: 'mdl-grid' },
+	                    { className: this.state.hasGeneratedContent ? "mdl-cell mdl-cell--8-col mdl-shadow--2dp mdl-color--grey-100" : "hidden" },
 	                    React.createElement(
-	                        'button',
-	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' },
-	                        'COPY HTML'
+	                        'div',
+	                        { className: 'mdl-grid' },
+	                        React.createElement(
+	                            'button',
+	                            { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored btn-copy', 'data-clipboard-action': 'copy', 'data-clipboard-target': '#code-container' },
+	                            'COPY HTML'
+	                        ),
+	                        React.createElement(
+	                            'button',
+	                            { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored', onClick: this.openNewWindowOnClick },
+	                            'VIEW FULL'
+	                        ),
+	                        React.createElement(
+	                            'button',
+	                            { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored', onClick: this.clearContent },
+	                            'CLEAR'
+	                        )
 	                    ),
 	                    React.createElement(
-	                        'button',
-	                        { className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored', onClick: this.openNewWindowOnClick },
-	                        'VIEW FULL'
-	                    )
-	                ),
-	                React.createElement(
-	                    'div',
-	                    { className: 'mdl-grid' },
-	                    React.createElement(
-	                        'pre',
-	                        { className: 'mdl-cell mdl-cell--12-col mdl-color--grey-400' },
-	                        this.state.generatedContent
+	                        'div',
+	                        { className: 'mdl-grid' },
+	                        React.createElement(
+	                            'code',
+	                            { className: 'mdl-cell mdl-cell--12-col mdl-color--grey-400 code-container', id: 'code-container' },
+	                            this.state.generatedContent
+	                        )
 	                    )
 	                )
 	            )

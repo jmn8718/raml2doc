@@ -67,7 +67,16 @@ a.mdl-navigation__link.active{
   width: 100%;
   margin: 0;
 }
+.error-message > p{
+  margin: 16px;
+}
 .mdl-spinner{
   display: block;
   margin: 16px auto;
 }
+
+/*code.code-container{*/
+  /*word-wrap: break-word;*/
+  /*text-overflow: ellipsis;*/
+  /*white-space: nowrap;*/
+/*}*/

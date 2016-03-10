@@ -16,16 +16,28 @@ var docFactory = React.createClass({
           termsLink:'',
           baseUri:'',
           environment:'',
-          template:'raml2html',
-          quickstart:'general'
+          template:'customDoc',
+          quickstart:'general',
+          clipboard: undefined
       }
     },
     componentDidMount:function(){
-        //We have to upgrade the js elements
-        componentHandler.upgradeDom();
+        var that = this
+        setTimeout(function(){
+            that.setState({clipboard:new Clipboard('.btn-copy')})
+            //this.state.clipboard = new Clipboard('.btn-copy');
+            if(componentHandler!==undefined)
+                componentHandler.upgradeDom();
+            //that.setState({loading:false})
+            //console.log(that.state.clipboard)
+        },150);
+
+    },
+    componentWillUnmount:function(){
+        this.state.clipboard.destroy()
     },
     handleChange: function(event) {
-        console.log(event.target)
+        //console.log(event.target)
         var state = {}
         if(event.target.id === 'url')
             state = { url: event.target.value}
@@ -59,29 +71,32 @@ var docFactory = React.createClass({
             this.setError('Introduce a valid url.')
         } else if(apiName.length <= 0){
             this.setError('Introduce a name for the api.')
+        } else if(template.length <= 0){
+            this.setError('Select a template.')
         } else {
-            var url = '/docFactory/raml?url='+url+'&apiName='+apiName+'&quickstart='+quickstart
+            var urlApi = '/'+template
+            urlApi += '/raml?url='+url+'&apiName='+apiName+'&quickstart='+quickstart
             if(environment.length>0)
-                url+='&environment='+environment
+                urlApi+='&environment='+environment
             if(baseUri.length>0)
-                url+='&baseUri='+baseUri
+                urlApi+='&baseUri='+baseUri
             if(termsLink.length>0)
-                url+='&termsLink='+termsLink
+                urlApi+='&termsLink='+termsLink
             if(overviewLink.length>0)
-                url+='&overviewLink='+overviewLink
+                urlApi+='&overviewLink='+overviewLink
             if(template.length>0)
-                url+='&template='+template
-
-            this.setState({uriRequest:url})
+                urlApi+='&template='+template
+            console.log(url)
+            this.setState({uriRequest:urlApi})
             if(template.length>0 && template==='raml2html'){
-                this.openNewWindowOnClick(url)
+                this.openNewWindowOnClick(urlApi)
             } else {
                 this.setState({
                     loading:true,
                     messageLoading:'Generating the documentation, please wait a little...'
                 });
                 $.ajax({
-                    url: url,
+                    url: urlApi,
                     //dataType: 'json',
                     cache: false,
                     success: function(data) {
@@ -105,6 +120,12 @@ var docFactory = React.createClass({
             }
         }
     },
+    clearContent:function(){
+        this.setState({
+            generatedContent:'',
+            hasGeneratedContent: false,
+        });
+    },
     openNewWindowOnClick:function(url){
         var uri = (url!== undefined) ? url : this.state.uriRequest
         var tab = window.open(uri,'_blank');
@@ -127,9 +148,9 @@ var docFactory = React.createClass({
                     <p>{this.state.messageError}</p>
                 </div>
                 <div className="mdl-grid">
-                    <div className="mdl-cell mdl-cell--2-col">
+                    <div className={this.state.hasGeneratedContent ? "hidden" : "mdl-cell mdl-cell--2-col"}>
                     </div>
-                    <div className="mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100">
+                    <div className={this.state.hasGeneratedContent ? "mdl-cell mdl-cell--4-col mdl-shadow--2dp container-main mdl-color--grey-100" : "mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100"}>
                         <form  onSubmit={this.handleSubmit}>
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input className="mdl-textfield__input" type="url" id="url" ref="url" onChange={this.handleChange}></input>
@@ -204,8 +225,12 @@ var docFactory = React.createClass({
                                     (Required) Check the option for the template of the documentation
                                 </div>
                                 <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="template-1">
-                                    <input type="radio" id="template-1" className="mdl-radio__button" name="template" value="raml2html" ref="template" onChange={this.handleChange} defaultChecked/>
+                                    <input type="radio" id="template-1" className="mdl-radio__button" name="template" value="raml2html" ref="template" onChange={this.handleChange}/>
                                     <span className="mdl-radio__label">raml2html</span>
+                                </label>
+                                <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="template-2">
+                                    <input type="radio" id="template-2" className="mdl-radio__button" name="template" value="custom" ref="template" onChange={this.handleChange} defaultChecked/>
+                                    <span className="mdl-radio__label">custom</span>
                                 </label>
                             </div>
 
@@ -215,22 +240,26 @@ var docFactory = React.createClass({
 
                         </form>
                     </div>
-                    <div className="mdl-cell mdl-cell--2-col">
+                    <div className={this.state.hasGeneratedContent ? "hidden" : "mdl-cell mdl-cell--2-col" }>
+                    </div>
+                    <div className={this.state.hasGeneratedContent ? "mdl-cell mdl-cell--8-col mdl-shadow--2dp mdl-color--grey-100" : "hidden"}>
+                        <div className="mdl-grid">
+                            <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored btn-copy" data-clipboard-action="copy" data-clipboard-target="#code-container">
+                                COPY HTML
+                            </button>
+                            <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={this.openNewWindowOnClick}>
+                                VIEW FULL
+                            </button>
+                            <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={this.clearContent}>
+                                CLEAR
+                            </button>
+                        </div>
+                        <div className="mdl-grid">
+                            <code className="mdl-cell mdl-cell--12-col mdl-color--grey-400 code-container" id="code-container">{this.state.generatedContent}</code>
+                        </div>
                     </div>
                 </div>
-                <div className={this.state.hasGeneratedContent ? "mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--grey-100" : "hidden"}>
-                    <div className="mdl-grid">
-                        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                            COPY HTML
-                        </button>
-                        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={this.openNewWindowOnClick}>
-                            VIEW FULL
-                        </button>
-                    </div>
-                    <div className="mdl-grid">
-                        <pre className="mdl-cell mdl-cell--12-col mdl-color--grey-400">{this.state.generatedContent}</pre>
-                    </div>
-                </div>
+
             </div>
         )
     }

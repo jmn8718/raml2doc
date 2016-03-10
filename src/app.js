@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var docFactory = require('./routes/docFactory');
+var customDoc = require('./routes/customDoc');
 var statusError = require('./routes/statusError');
 
 var app = express();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/docFactory', docFactory);
+app.use('/customDoc', customDoc);
 app.use('/statusError', statusError);
 app.use('/', routes);
 

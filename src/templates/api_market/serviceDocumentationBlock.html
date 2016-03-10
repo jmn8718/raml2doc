@@ -1,0 +1,296 @@
+<article id="{{anchor}}">
+    <section class="api__documentation">
+        <article>
+            <div class="api__documentation__subtitle">
+                <h1 class="api__documentation__title">{{path}}</h1>
+                <span class="api__documentation__icon"><strong
+                        class="api__documentation__http api__documentation__http--{{methodData.method | lower }}">{{methodData.method
+                    | lower }}</strong> </span>
+            </div>
+            {% if description != undefined %}
+            <p class="api__documentation__text">
+                {% autoescape false %} {{description}} {% endautoescape %}
+            </p>
+            {% endif %}
+            {% if methodData.description != undefined %}
+            <p class="api__documentation__text">{% autoescape false %}{{methodData.description}}{% endautoescape %}</p>
+            {% endif %}
+        </article>
+        {% if headers != null %}
+        <article id="{{anchor}}__headers">
+            <div class="api__documentation__subtitle">
+                <h4 class="api__documentation__section-name">Headers</h4>
+            </div>
+            {% for key,prop in headers %}
+            <div class="api__documentation__parameters">
+                <div class="col--first api__documentation__parameters__row api__documentation__parameters__row-top">
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__title">{{key}}</span>
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">{% autoescape false %} {{prop.description}}{% endautoescape %}</span>
+                    </div>
+                </div>
+                <div class="col--second api__documentation__parameters__row">
+                    <div class="api__documentation__parameters__col">
+                        <span class=" api__documentation__parameters__title">{%if prop["required"]%}required{%else%}optional{%endif%} (
+                            <label class="parameters__type">{{prop.type}}</label>)
+                        </span>
+                        {% if prop["enum"]%}
+                        <strong>one of (</strong> {{prop["enum"]}} <strong>)</strong>
+                        {% endif %}
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">
+                        {% if prop["example"]%}
+                            <strong>Example:</strong>{% autoescape false %} {{prop["example"]}} {% endautoescape %}
+                        {% else %}
+                            <strong></strong>
+                        {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </article>
+        {% endif %}
+
+        {% if methodData.method == "post" && body != null %}
+        <article id="{{anchor}}__body-parameters">
+            <div class="api__documentation__subtitle">
+                <h4 class="api__documentation__section-name">Body</h4>
+            </div>
+            {% for key,prop in body %}
+            <div class="api__documentation__parameters">
+                <div class="col--first api__documentation__parameters__row api__documentation__parameters__row-top">
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__title">{{prop["key"]}}</span>
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">{% autoescape false %} {{prop}}{% endautoescape %}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </article>
+        {% endif %}
+
+        {% if queryParams != null %}
+        <article id="{{anchor}}__query-parameters">
+            <div class="api__documentation__subtitle">
+                <h4 class="api__documentation__section-name">Query Parameters</h4>
+            </div>
+            {% for key,prop in queryParams %}
+            <div class="api__documentation__parameters">
+                <div class="col--first api__documentation__parameters__row api__documentation__parameters__row-top">
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__title">{{prop["key"]}}</span>
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">{% autoescape false %} {{prop.description}}{% endautoescape %}</span>
+                    </div>
+                </div>
+                <div class="col--second api__documentation__parameters__row">
+                    <div class="api__documentation__parameters__col">
+                        <span class=" api__documentation__parameters__title">{%if prop["required"]%}required{%else%}optional{%endif%} (<label
+                                class="parameters__type">{{prop.type}}</label>)</span>
+                        {% if prop["enum"]%}
+                        <strong>one of (</strong> {{prop["enum"]}} <strong>)</strong>
+                        {% endif %}
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">
+                        {% if prop["example"]%}
+                            <strong>Example:</strong>{% autoescape false %} {{prop["example"]}} {% endautoescape %}
+                        {% else %}
+                            <strong></strong>
+                        {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </article>
+        {% endif %}
+
+        {% if uriParams != null %}
+        <article id="{{anchor}}__uri-parameters">
+            <div class="api__documentation__subtitle">
+                <h4 class="api__documentation__section-name">URI Parameters</h4>
+            </div>
+            {% for key,prop in uriParams %}
+            <div class="api__documentation__parameters">
+                <div class="col--first api__documentation__parameters__row api__documentation__parameters__row-top">
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__title">{{prop["key"]}}</span>
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">{% autoescape false %} {{prop.description}}{% endautoescape %}</span>
+                    </div>
+                </div>
+                <div class="col--second api__documentation__parameters__row">
+                    <div class="api__documentation__parameters__col">
+                        <span class=" api__documentation__parameters__title">{%if prop["required"]%}required{%else%}optional{%endif%} (<label
+                                class="parameters__type">{{prop.type}}</label>)</span>
+                        {% if prop["enum"]%}
+                        <strong>one of (</strong> {{prop["enum"]}} <strong>)</strong>
+                        {% endif %}
+                    </div>
+                    <div class="api__documentation__parameters__col">
+                        <span class="api__documentation__parameters__text">
+                        {% if prop["example"]%}
+                            <strong>Example:</strong>{% autoescape false %} {{prop["example"]}} {% endautoescape %}
+                        {% else %}
+                            <strong></strong>
+                        {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </article>
+        {% endif %}
+    </section>
+
+
+    <section class="api__example">
+        <h1 class="example__title">{{path}}</h1>
+
+        <h2 class="example__subtitle--call-code">EXAMPLE</h2>
+
+        <div class="example__call-code">
+            <div class="example__code-container language-java">
+                <pre class="prettyprint">{{ javaexample }}</pre>
+            </div>
+
+            <div class="example__code-container language-python hidden">
+                <pre class="prettyprint">{{ pythexample }}</pre>
+            </div>
+
+            <div class="example__code-container language-curl hidden">
+                <pre class="prettyprint"> {{ curlexample }}</pre>
+            </div>
+        </div>
+        {% if postBodyPars%}
+        <div class="example__info">
+            <h2 class="example__subtitle--response">REQUEST</h2>
+            {% if postBodyPars["application/json"] %}
+            {% if postBodyPars["application/json"]["example"] %}
+            <h3 class="example__subtitle--status-code">Example</h3>
+                <span class="example__json">
+                    <pre class="prettyprint_json">{% autoescape false %} {{postBodyPars["application/json"]["example"]}} {% endautoescape %}</pre>
+                </span>
+            {% endif %}
+            {% if postBodyPars["application/json"]["schema"] %}
+            <h3 class="example__subtitle--status-code">Schema</h3>
+                <span class="example__json">
+                    <pre class="prettyprint_json">{% autoescape false %} {{postBodyPars["application/json"]["schema"]}} {% endautoescape %}</pre>
+                </span>
+            {% endif %}
+            {% else %}
+            {% for key,prop in postBodyPars %}
+            <div class="example__info__col {% if not loop.first %}example__info__col-with_margin{% endif %}">
+                    <span class="example__info__block">
+                        <label class="example__info__text">Example: </label>
+                    </span>
+            </div>
+            <div class="example__info__col {% if not loop.first %}example__info__col-with_margin{% endif %}">
+                    <span class="example__info__block">
+                        <label class="example__info__text">Type: </label>
+                        <label class="example__info__text">{{key}}</label>
+                    </span>
+            </div>
+            {% if prop["example"] %}
+             <span class="example__json ">
+                 <pre class="prettyprint_json"> {{ prop["example"] }}</pre>
+             </span>
+            {% else %}
+            <span class="example__json ">
+                 <pre class="prettyprint_json">
+                     {%for key2,prop2 in prop['formParameters']%}
+                        {{key2}}:
+                            {%for key3,prop3 in prop2%}
+                                {{key3}}: {{prop3}}
+                            {%endfor%}
+                    {%endfor%}
+                 </pre>
+             </span>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+        <h2 class="example__subtitle--response">RESPONSE</h2>
+
+        <h3 class="example__subtitle--status-code">HTTP status code</h3>
+
+        <div class="example__status-codes">
+            <div class="example__status-codes-wrapper">
+
+                {% for httpCode,responses in methodData.responses %}
+                <span class="example__status-code example__status-code">{{httpCode}}</span>
+                {% endfor %}
+            </div>
+            {% for httpCode,responses in methodData.responses %}
+            <div class="example__info example__status-code__{{httpCode}} hidden">
+                {% if responses["description"] %}
+                <ul class="example__additional-info">
+                    <span class="example__info__block">
+                     <div class="example__info__text">
+                         {% autoescape false %} {{formatedApiMarket(renderMD(responses["description"]))}} {%
+                         endautoescape %}
+                     </div>
+                    </span>
+                </ul>
+                {% endif %}
+                {% if responses["body"] %}
+                <h3 class="example__subtitle--status-code">BODY</h3>
+                {% for key,prop in responses["body"] %}
+                <div class="example__info__col {% if not loop.first %}example__info__col-with_margin{% endif %}">
+                    <span class="example__info__block">
+                        <label class="example__info__text">Example: </label>
+                    </span>
+                </div>
+                <div class="example__info__col {% if not loop.first %}example__info__col-with_margin{% endif %}">
+                    <span class="example__info__block">
+                        <label class="example__info__text">Type: </label>
+                        <label class="example__info__text">{{key}}</label>
+                    </span>
+                </div>
+                 <span class="example__json example__response--{{httpCode}} hidden">
+                 {% if prop["formatedExample"] %}
+                     <pre class="prettyprint_json">{% autoescape false %} {{ prop["formatedExample"] }} {% endautoescape %}</pre>
+                 {% else %}
+                     <pre class="prettyprint_json"> {{ prop["example"] }}</pre>
+                 {% endif %}
+                 </span>
+                {% endfor %}
+                {% endif %}
+                {% if responses["headers"] %}
+                <h3 class="example__subtitle--status-code">HEADERS</h3>
+                {% for key,prop in responses["headers"] %}
+                <div class="example__info__col ">
+                    <span class="example__info__block">
+                        <label class="example__info__text">Example: </label>
+                    </span>
+                </div>
+                <div class="example__info__col">
+                    <span class="example__info__block">
+                        <label class="example__info__text">Type: </label>
+                        <label class="example__info__text">{{key}}</label>
+                    </span>
+                </div>
+                 <span class="example__json example__response--{{httpCode}} hidden">
+                 {% if prop["formatedExample"] %}
+                     <pre class="prettyprint_json">{% autoescape false %} {{ prop["formatedExample"] }} {% endautoescape %}</pre>
+                 {% else %}
+                     <pre class="prettyprint_json"> {{ prop["example"] }}</pre>
+                 {% endif %}
+                 </span>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</article>
