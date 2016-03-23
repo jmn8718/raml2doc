@@ -23851,7 +23851,46 @@
 	            'div',
 	            { className: 'mdl-grid root-cantainer' },
 	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' }),
-	            React.createElement('div', { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' }),
+	            React.createElement(
+	                'div',
+	                { className: 'mdl-cell mdl-cell--8-col mdl-shadow--2dp container-main mdl-color--grey-100' },
+	                React.createElement(
+	                    'p',
+	                    null,
+	                    'Website developed with ReactJS and Material design lite'
+	                ),
+	                React.createElement(
+	                    'p',
+	                    null,
+	                    'Click on the links in the header to go to:'
+	                ),
+	                React.createElement(
+	                    'p',
+	                    null,
+	                    React.createElement(
+	                        'span',
+	                        null,
+	                        'docFactory'
+	                    ),
+	                    ' - To generate a template of a RAML',
+	                    React.createElement('br', null),
+	                    'You can use one of the following ramls:',
+	                    React.createElement('br', null),
+	                    'https://raw.githubusercontent.com/raml-org/raml-tutorial-200/master/jukebox-api.raml',
+	                    React.createElement('br', null),
+	                    'https://raw.githubusercontent.com/scaganoff/example-eventlog-api/master/eventlog.raml'
+	                ),
+	                React.createElement(
+	                    'p',
+	                    null,
+	                    React.createElement(
+	                        'span',
+	                        null,
+	                        'Errors'
+	                    ),
+	                    ' - To see a list of errors'
+	                )
+	            ),
 	            React.createElement('div', { className: 'mdl-cell mdl-cell--2-col' })
 	        );
 	    }
@@ -23935,9 +23974,9 @@
 	            if (template.length > 0) urlApi += '&template=' + template;
 	            console.log(url);
 	            this.setState({ uriRequest: urlApi });
-	            if (template.length > 0 && template === 'raml2html') {
-	                this.openNewWindowOnClick(urlApi);
-	            } else {
+	            if (template.length > 0 && template === 'docFactory' /* && template==='raml2html'*/) {
+	                    this.openNewWindowOnClick(urlApi);
+	                } else {
 	                this.setState({
 	                    loading: true,
 	                    messageLoading: 'Generating the documentation, please wait a little...'
@@ -24049,110 +24088,6 @@
 	                        ),
 	                        React.createElement(
 	                            'div',
-	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
-	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'overview', onChange: this.handleChange }),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-textfield__label', htmlFor: 'overview' },
-	                                'Overview Link'
-	                            ),
-	                            React.createElement(
-	                                'div',
-	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'overview' },
-	                                '(Optional) Introduce the url for the overview link'
-	                            )
-	                        ),
-	                        React.createElement(
-	                            'div',
-	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
-	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'terms', onChange: this.handleChange }),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-textfield__label', htmlFor: 'terms' },
-	                                'Terms and Conditions Link'
-	                            ),
-	                            React.createElement(
-	                                'div',
-	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'terms' },
-	                                '(Optional) Introduce the url for the terms and conditions link'
-	                            )
-	                        ),
-	                        React.createElement(
-	                            'div',
-	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
-	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'baseUri', onChange: this.handleChange }),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-textfield__label', htmlFor: 'baseUri' },
-	                                'Base Uri'
-	                            ),
-	                            React.createElement(
-	                                'div',
-	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'baseUri' },
-	                                '(Optional) Introduce the base uri to set in your documentation. It will replace the base uri in your raml.'
-	                            )
-	                        ),
-	                        React.createElement(
-	                            'div',
-	                            { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' },
-	                            React.createElement('input', { className: 'mdl-textfield__input', type: 'text', id: 'environment', onChange: this.handleChange }),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-textfield__label', htmlFor: 'environment' },
-	                                'Environment'
-	                            ),
-	                            React.createElement(
-	                                'div',
-	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'environment' },
-	                                '(Optional) Introduce the environment word for your api. It will set your base uri to "apis.bbva.com", and the environment you provide will be added to "".'
-	                            )
-	                        ),
-	                        React.createElement(
-	                            'div',
-	                            { className: 'mdl-textfield' },
-	                            React.createElement(
-	                                'span',
-	                                { className: 'mdl-radio__label mdl-color-text--primary', id: 'quickstart-checkbox-label' },
-	                                'Quickstart'
-	                            ),
-	                            React.createElement(
-	                                'div',
-	                                { className: 'mdl-tooltip mdl-tooltip--bottom', htmlFor: 'quickstart-checkbox-label' },
-	                                '(Required) Check the option to introduce a quickstart section in your documentation'
-	                            ),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'quickstart-1' },
-	                                React.createElement('input', { type: 'radio', id: 'quickstart-1', className: 'mdl-radio__button', name: 'quickstart', value: 'no', ref: 'quickstart', onChange: this.handleChange }),
-	                                React.createElement(
-	                                    'span',
-	                                    { className: 'mdl-radio__label' },
-	                                    'No'
-	                                )
-	                            ),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'quickstart-2' },
-	                                React.createElement('input', { type: 'radio', id: 'quickstart-2', className: 'mdl-radio__button', name: 'quickstart', value: 'paystats', ref: 'quickstart', onChange: this.handleChange }),
-	                                React.createElement(
-	                                    'span',
-	                                    { className: 'mdl-radio__label' },
-	                                    'Paystats'
-	                                )
-	                            ),
-	                            React.createElement(
-	                                'label',
-	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'quickstart-3' },
-	                                React.createElement('input', { type: 'radio', id: 'quickstart-3', className: 'mdl-radio__button', name: 'quickstart', value: 'general', ref: 'quickstart', onChange: this.handleChange, defaultChecked: true }),
-	                                React.createElement(
-	                                    'span',
-	                                    { className: 'mdl-radio__label' },
-	                                    'General'
-	                                )
-	                            )
-	                        ),
-	                        React.createElement(
-	                            'div',
 	                            { className: 'mdl-textfield' },
 	                            React.createElement(
 	                                'span',
@@ -24167,7 +24102,7 @@
 	                            React.createElement(
 	                                'label',
 	                                { className: 'mdl-radio mdl-js-radio mdl-js-ripple-effect', htmlFor: 'template-1' },
-	                                React.createElement('input', { type: 'radio', id: 'template-1', className: 'mdl-radio__button', name: 'template', value: 'raml2html', ref: 'template', onChange: this.handleChange }),
+	                                React.createElement('input', { type: 'radio', id: 'template-1', className: 'mdl-radio__button', name: 'template', value: 'docFactory', ref: 'template', onChange: this.handleChange }),
 	                                React.createElement(
 	                                    'span',
 	                                    { className: 'mdl-radio__label' },
@@ -24183,6 +24118,11 @@
 	                                    { className: 'mdl-radio__label' },
 	                                    'custom'
 	                                )
+	                            ),
+	                            React.createElement(
+	                                'p',
+	                                null,
+	                                'Selecting raml2html will open a new tab. Selecting custom it will load the html code in the right side.'
 	                            )
 	                        ),
 	                        React.createElement(

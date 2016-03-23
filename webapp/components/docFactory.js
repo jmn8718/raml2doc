@@ -88,7 +88,7 @@ var docFactory = React.createClass({
                 urlApi+='&template='+template
             console.log(url)
             this.setState({uriRequest:urlApi})
-            if(template.length>0 && template==='raml2html'){
+            if(template.length>0 && template==='docFactory'/* && template==='raml2html'*/){
                 this.openNewWindowOnClick(urlApi)
             } else {
                 this.setState({
@@ -168,70 +168,20 @@ var docFactory = React.createClass({
                                 </div>
                             </div>
 
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input className="mdl-textfield__input" type="text" id="overview"  onChange={this.handleChange} ></input>
-                                <label className="mdl-textfield__label" htmlFor="overview">Overview Link</label>
-                                <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="overview">
-                                    (Optional) Introduce the url for the overview link
-                                </div>
-                            </div>
-
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input className="mdl-textfield__input" type="text" id="terms"  onChange={this.handleChange} ></input>
-                                <label className="mdl-textfield__label" htmlFor="terms">Terms and Conditions Link</label>
-                                <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="terms">
-                                    (Optional) Introduce the url for the terms and conditions link
-                                </div>
-                            </div>
-
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input className="mdl-textfield__input" type="text" id="baseUri"  onChange={this.handleChange} ></input>
-                                <label className="mdl-textfield__label" htmlFor="baseUri">Base Uri</label>
-                                <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="baseUri">
-                                    (Optional) Introduce the base uri to set in your documentation. It will replace the base uri in your raml.
-                                </div>
-                            </div>
-
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input className="mdl-textfield__input" type="text" id="environment"  onChange={this.handleChange} ></input>
-                                <label className="mdl-textfield__label" htmlFor="environment">Environment</label>
-                                <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="environment">
-                                    (Optional) Introduce the environment word for your api. It will set your base uri to "apis.bbva.com", and the environment you provide will be added to "".
-                                </div>
-                            </div>
-
-                            <div className="mdl-textfield" >
-                                <span className="mdl-radio__label mdl-color-text--primary" id="quickstart-checkbox-label">Quickstart</span>
-                                <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="quickstart-checkbox-label">
-                                    (Required) Check the option to introduce a quickstart section in your documentation
-                                </div>
-                                <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="quickstart-1">
-                                    <input type="radio" id="quickstart-1" className="mdl-radio__button" name="quickstart" value="no" ref="quickstart"  onChange={this.handleChange} />
-                                    <span className="mdl-radio__label">No</span>
-                                </label>
-                                <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="quickstart-2">
-                                    <input type="radio" id="quickstart-2" className="mdl-radio__button" name="quickstart" value="paystats" ref="quickstart"  onChange={this.handleChange}  />
-                                    <span className="mdl-radio__label">Paystats</span>
-                                </label>
-                                <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="quickstart-3">
-                                    <input type="radio" id="quickstart-3" className="mdl-radio__button" name="quickstart" value="general" ref="quickstart"  onChange={this.handleChange} defaultChecked/>
-                                    <span className="mdl-radio__label">General</span>
-                                </label>
-                            </div>
-
                             <div className="mdl-textfield" >
                                 <span className="mdl-radio__label mdl-color-text--primary" id="template-checkbox-label">Template</span>
                                 <div className="mdl-tooltip mdl-tooltip--bottom" htmlFor="template-checkbox-label">
                                     (Required) Check the option for the template of the documentation
                                 </div>
                                 <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="template-1">
-                                    <input type="radio" id="template-1" className="mdl-radio__button" name="template" value="raml2html" ref="template" onChange={this.handleChange}/>
+                                    <input type="radio" id="template-1" className="mdl-radio__button" name="template" value="docFactory" ref="template" onChange={this.handleChange}/>
                                     <span className="mdl-radio__label">raml2html</span>
                                 </label>
                                 <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="template-2">
                                     <input type="radio" id="template-2" className="mdl-radio__button" name="template" value="custom" ref="template" onChange={this.handleChange} defaultChecked/>
                                     <span className="mdl-radio__label">custom</span>
                                 </label>
+                                <p>Selecting raml2html will open a new tab. Selecting custom it will load the html code in the right side.</p>
                             </div>
 
                             <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
