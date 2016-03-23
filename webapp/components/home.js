@@ -17,6 +17,8 @@ var home = React.createClass({
                         https://raw.githubusercontent.com/scaganoff/example-eventlog-api/master/eventlog.raml
                     </p>
                     <p><span>Errors</span> - To see a list of errors</p>
+                    <p>Check the code of this site in the github repository <a href="https://github.com/jmn8718/raml2doc" target="_blank">github.com/jmn8718/raml2doc</a></p>
+                    <p>If you want to know about me, check my personal page in <a href="http://josemiguelnavarro.herokuapp.com/" target="_blank">josemiguelnavarro.herokuapp.com/</a></p>
                 </div>
                 <div className="mdl-cell mdl-cell--2-col">
                 </div>
